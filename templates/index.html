@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Etusivu</title>
+</head>
+
+<body>
+  <h1>Etusivu</h1>
+  <p>{{ message }}</p>
+  <ul>
+    {% for item in items %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+  <img src="/static/kuva.png" />
+</body>
+
+</html>
