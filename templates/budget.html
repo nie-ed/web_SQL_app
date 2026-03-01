@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{ budget.title }}</title>
+</head>
+
+<body>
+  <h1>{{ budget.title }}</h1>
+
+  <hr />
+  {% for expense in expenses %}
+  {% if expense.user_id == session.user_id %}
+    <p>
+    {{ expense.content }}
+    </p>
+    <p>Lisätty: {{expense.sent_at}}</p>
+  {% endif %}
+  <hr />
+  {% endfor %}
+
+  {% if session.user_id %}
+  <h2>Uusi viesti</h2>
+
+  <form action="/new_expense" method="post">
+    <p>
+      Meno:<br />
+      <textarea name="title" rows="5" cols="40"></textarea>
+    </p>
+    <input type="hidden" name="budget_id" value="{{ budget.id }}" />
+    <input type="hidden" name="user_id" value="{{ session.user_id }}" />
+    <input type="submit" value="Lisää meno" />
+  </form>
+  <hr />
+  {% endif %}
+
+</body>
+
+</html>

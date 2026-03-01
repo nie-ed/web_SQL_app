@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Omat sivut</title>
+</head>
+
+<body>
+    <h1>Omat sivut</h1>
+  <p>
+    Olet kirjautunut nimellä {{ session.username }}
+  </p>
+
+  <h2>Budjetointi</h2>
+
+  <hr />
+  {% for budget in budgets %}
+  <p>
+    <a href="/budget/{{ budget.id }}">{{ budget.title }}</a>
+  </p>
+  <hr />
+  {% endfor %}
+
+  <h2>Uusi Meno</h2>
+
+  <form action="/new_budget" method="post">
+    <p>
+      Meno:<br />
+      <textarea name="content" rows="5" cols="40"></textarea>
+    </p>
+    <input type="hidden" name="user_id" value="{{ session.user_id }}" />
+    <input type="submit" value="Lisää meno" />
+  </form>
+
+  <p>
+    <a href="/logout">Kirjaudu ulos</a>
+  </p>
+</body>
+
+</html>

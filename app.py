@@ -32,21 +32,48 @@ def create():
         return "VIRHE: tunnus on jo varattu"
     
     session["username"] = username
-    return redirect("/")
+    return redirect("/user_page")
 
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form["username"]
     password = request.form["password"]
     
-    sql = "SELECT password_hash FROM users WHERE username = ?"
-    password_hash = db.query(sql, [username])[0][0]
+    sql = "SELECT id, password_hash FROM users WHERE username = ?"
+    password_hash = db.query(sql, [username])
+    user_id, password_hash = sql[0]
 
     if check_password_hash(password_hash, password):
         session["username"] = username
-        return redirect("/")
+        session["user_id"] = user_id
+        return redirect("/user_page")
     else:
         return "VIRHE: väärä tunnus tai salasana"
+    
+@app.route("/user_page")
+def user_page():
+    sql = """SELECT id, title, user_id  FROM budgets"""
+    budgets = db.query(sql)
+    return render_template("user_page.html", budgets=budgets)
+
+@app.route("/new_expense", methods=["POST"])
+def new_expense():
+    content = request.form["content"]
+    budget_id = request.form["budget_id"]
+    user_id = request.form["user_id"]
+
+    sql = """INSERT INTO expenses (content, sent_at, user_id, budget_id) VALUES
+             (?, datetime('now'), ?, ?)"""
+    db.execute(sql, [content, user_id, budget_id])
+
+@app.route("/new_budget", methods=["POST"])
+def new_budget():
+    title = request.form["title"]
+    user_id = request.form["user_id"]
+
+    sql = "INSERT INTO budgets (title, user_id) VALUES (?, ?)"
+    db.execute(sql, [title, user_id])
+    return redirect("/user_page")
 
 @app.route("/logout")
 def logout():
